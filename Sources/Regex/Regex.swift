@@ -66,54 +66,8 @@ extension Regex {
     public func isMatch(_ string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Bool {
         return _regex.firstMatch(in: string, options: options, range: range ?? string.fullRange) != nil
     }
-}
-
-public func ~= (pattern: Regex, value: String) -> Bool {
-    return pattern.isMatch(value)
-}
-
-extension Regex: ReferenceConvertible {
     
-    public typealias ReferenceType = NSRegularExpression
-    
-    public func _bridgeToObjectiveC() -> NSRegularExpression {
-        return _regex
-    }
-    
-    public static func _forceBridgeFromObjectiveC(_ source: NSRegularExpression, result: inout Regex?) {
-        result = Regex(source)
-    }
-    
-    public static func _conditionallyBridgeFromObjectiveC(_ source: NSRegularExpression, result: inout Regex?) -> Bool {
-        result = Regex(source)
-        return true
-    }
-    
-    public static func _unconditionallyBridgeFromObjectiveC(_ source: NSRegularExpression?) -> Regex {
-        return Regex(source!)
-    }
-    
-    public var description: String {
-        return _regex.description
-    }
-    
-    public var debugDescription: String {
-        return _regex.debugDescription
-    }
-}
-
-// MARK: -
-
-extension String {
-    
-    var fullRange: NSRange {
-        return NSRange(location: 0, length: utf16.count)
-    }
-    
-    subscript(nsRange: NSRange) -> Substring? {
-        guard let range = Range(nsRange, in: self) else {
-            return nil
-        }
-        return self[range]
+    public static func ~= (pattern: Regex, value: String) -> Bool {
+        return pattern.isMatch(value)
     }
 }

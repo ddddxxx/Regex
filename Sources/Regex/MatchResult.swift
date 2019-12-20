@@ -37,7 +37,7 @@ extension MatchResult {
         }
         return first.unsafelyUnwrapped.content
     }
-
+    
     public var string: String {
         return content.map(String.init) ?? ""
     }
