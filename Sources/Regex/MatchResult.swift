@@ -4,7 +4,7 @@ public struct MatchResult: Equatable, Hashable {
     
     public struct Capture: Equatable, Hashable {
         public let range: NSRange
-        public let content: Substring
+        public let content: Substring?
     }
     
     public let captures: [Capture?]
@@ -15,13 +15,9 @@ public struct MatchResult: Equatable, Hashable {
             return
         }
         captures = (0..<result.numberOfRanges).map { index in
-            let nsrange = result.range(at: index)
-            guard nsrange.location != NSNotFound else { return nil }
-            guard let r = Range(nsrange, in: string) else {
-                // FIXME: regex detected an invalid position.
-                return Capture(range: nsrange, content: "")
-            }
-            return Capture(range: nsrange, content: string[r])
+            let nsRange = result.range(at: index)
+            guard nsRange.location != NSNotFound else { return nil }
+            return Capture(range: nsRange, content: string[nsRange])
         }
     }
 }
@@ -29,15 +25,21 @@ public struct MatchResult: Equatable, Hashable {
 extension MatchResult {
     
     public var range: NSRange {
-        return captures.first!!.range
+        guard let first = captures.first else {
+            return NSRange(location: NSNotFound, length: 0)
+        }
+        return first.unsafelyUnwrapped.range
     }
     
-    public var content: Substring {
-        return captures.first!!.content
+    public var content: Substring? {
+        guard let first = captures.first else {
+            return nil
+        }
+        return first.unsafelyUnwrapped.content
     }
 
     public var string: String {
-        return String(content)
+        return content.map(String.init) ?? ""
     }
     
     public subscript(_ captureGroupIndex: Int) -> Capture? {
@@ -48,6 +50,6 @@ extension MatchResult {
 extension MatchResult.Capture {
     
     public var string: String {
-        return String(content)
+        return content.map(String.init) ?? ""
     }
 }
