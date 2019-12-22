@@ -10,10 +10,7 @@ public struct MatchResult: Equatable, Hashable {
     public let captures: [Capture?]
     
     init(result: NSTextCheckingResult, in string: String) {
-        guard result.range.location != NSNotFound else {
-            captures = []
-            return
-        }
+        precondition(result.range.location != NSNotFound)
         captures = (0..<result.numberOfRanges).map { index in
             let nsRange = result.range(at: index)
             guard nsRange.location != NSNotFound else { return nil }
@@ -25,17 +22,11 @@ public struct MatchResult: Equatable, Hashable {
 extension MatchResult {
     
     public var range: NSRange {
-        guard let first = captures.first else {
-            return NSRange(location: NSNotFound, length: 0)
-        }
-        return first.unsafelyUnwrapped.range
+        return captures[0].unsafelyUnwrapped.range
     }
     
     public var content: Substring? {
-        guard let first = captures.first else {
-            return nil
-        }
-        return first.unsafelyUnwrapped.content
+        return captures[0].unsafelyUnwrapped.content
     }
     
     public var string: String {
