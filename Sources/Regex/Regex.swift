@@ -15,6 +15,14 @@ public struct Regex: Equatable, Hashable {
     public init(_ pattern: String, options: Options = []) throws {
         _regex = try NSRegularExpression(pattern: pattern, options: options)
     }
+    
+    public init(_ staticPattern: StaticString, options: Options = []) {
+        do {
+            try self.init(staticPattern.description, options: options)
+        } catch {
+            preconditionFailure("failed to create regex: \(error)")
+        }
+    }
 }
 
 extension Regex {
