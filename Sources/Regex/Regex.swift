@@ -53,35 +53,22 @@ extension Regex {
 
 extension Regex {
     
-    #if canImport(Darwin)
     public func enumerateMatches(
         in string: String,
         options: MatchingOptions = [],
         range: NSRange? = nil,
         using block: (_ result: MatchResult?, _ flags: MatchingFlags, _ stop: inout Bool) -> Void
     ) {
-        _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullRange) { result, flags, stop in
-            let r = result.map { MatchResult(result: $0, in: string) }
-            var s = false
-            block(r, flags, &s)
-            stop.pointee = ObjCBool(s)
+        // `enumerateMatches` requires escaping closure in non-darwin platforms
+        withoutActuallyEscaping(block) { block in
+            _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullRange) { result, flags, stop in
+                let r = result.map { MatchResult(result: $0, in: string) }
+                var s = false
+                block(r, flags, &s)
+                stop.pointee = ObjCBool(s)
+            }
         }
     }
-    #else
-    public func enumerateMatches(
-        in string: String,
-        options: MatchingOptions = [],
-        range: NSRange? = nil,
-        using block: @escaping (_ result: MatchResult?, _ flags: MatchingFlags, _ stop: inout Bool) -> Void
-    ) {
-        _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullRange) { result, flags, stop in
-            let r = result.map { MatchResult(result: $0, in: string) }
-            var s = false
-            block(r, flags, &s)
-            stop.pointee = ObjCBool(s)
-        }
-    }
-    #endif
     
     public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [MatchResult] {
         return _regex.matches(in: string, options: options, range: range ?? string.fullRange).map {
