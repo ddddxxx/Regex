@@ -19,6 +19,7 @@ public struct Regex: Equatable, Hashable {
         _regex = regex
     }
     
+    @_disfavoredOverload
     public init(_ pattern: String, options: Options = []) throws {
         _regex = try NSRegularExpression(pattern: pattern, options: options)
     }
