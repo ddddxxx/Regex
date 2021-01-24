@@ -62,7 +62,7 @@ extension Regex {
     ) {
         // `enumerateMatches` requires escaping closure in non-darwin platforms
         withoutActuallyEscaping(block) { block in
-            _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullRange) { result, flags, stop in
+            _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullNSRange) { result, flags, stop in
                 let r = result.map { MatchResult(result: $0, in: string) }
                 var s = false
                 block(r, flags, &s)
@@ -72,23 +72,23 @@ extension Regex {
     }
     
     public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [MatchResult] {
-        return _regex.matches(in: string, options: options, range: range ?? string.fullRange).map {
+        return _regex.matches(in: string, options: options, range: range ?? string.fullNSRange).map {
             MatchResult(result: $0, in: string)
         }
     }
     
     public func numberOfMatches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Int {
-        return _regex.numberOfMatches(in: string, options: options, range: range ?? string.fullRange)
+        return _regex.numberOfMatches(in: string, options: options, range: range ?? string.fullNSRange)
     }
     
     public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> MatchResult? {
-        return _regex.firstMatch(in: string, options: options, range: range ?? string.fullRange).map {
+        return _regex.firstMatch(in: string, options: options, range: range ?? string.fullNSRange).map {
             MatchResult(result: $0, in: string)
         }
     }
     
     public func isMatch(_ string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Bool {
-        return _regex.firstMatch(in: string, options: options, range: range ?? string.fullRange) != nil
+        return _regex.firstMatch(in: string, options: options, range: range ?? string.fullNSRange) != nil
     }
     
     public static func ~= (pattern: Regex, value: String) -> Bool {

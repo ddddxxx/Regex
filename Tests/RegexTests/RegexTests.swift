@@ -6,7 +6,7 @@
 //
 
 import XCTest
-import Regex
+@testable import Regex
 
 class RegexTests: XCTestCase {
     
@@ -53,8 +53,8 @@ class RegexTests: XCTestCase {
         let source = "cafe\u{301}" // café
         let regex = Regex("caf.")
         let match = regex.firstMatch(in: source)!
+        XCTAssertNil(match.content)
         XCTAssertEqual(match.string, "cafe")
-        XCTAssertNil(Range(match.range, in: source))
     }
     
     static var allTests = [

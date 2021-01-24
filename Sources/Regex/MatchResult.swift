@@ -33,14 +33,14 @@ public struct MatchResult: Equatable, Hashable {
         }
         
         /// Captured content.
-        fileprivate let content: Content
+        fileprivate let _content: Content
         
         /// The matching range.
         public let range: NSRange
         
         /// The matched string.
         public var string: String {
-            switch content {
+            switch _content {
             case let .valid(substring):
                 return String(substring)
             case let .invalid(original):
@@ -48,15 +48,14 @@ public struct MatchResult: Equatable, Hashable {
             }
         }
         
-        /*
-        public var content: Substring? {
-            if case let .valid(substring) = _content else {
+        /* public */ var content: Substring? {
+            switch _content {
+            case let .valid(substring):
                 return substring
-            } else {
+            default:
                 return nil
             }
         }
-         */
     }
     
     /// A group of captured strings for a single match.
@@ -70,7 +69,7 @@ public struct MatchResult: Equatable, Hashable {
         captures = (0..<result.numberOfRanges).map { index in
             let nsRange = result.range(at: index)
             guard nsRange.location != NSNotFound else { return nil }
-            return Capture(content: .validate(string: string, range: nsRange), range: nsRange)
+            return Capture(_content: .validate(string: string, range: nsRange), range: nsRange)
         }
     }
     
@@ -82,6 +81,10 @@ public struct MatchResult: Equatable, Hashable {
     /// The entire matched string.
     public var string: String {
         return captures[0].unsafelyUnwrapped.string
+    }
+    
+    /* public */ var content: Substring? {
+        return captures[0].unsafelyUnwrapped.content
     }
     
     public subscript(_ captureGroupIndex: Int) -> Capture? {

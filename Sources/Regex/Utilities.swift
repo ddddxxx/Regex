@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension String {
+extension StringProtocol {
     
-    var fullRange: NSRange {
-        return NSRange(location: 0, length: utf16.count)
+    var fullNSRange: NSRange {
+        NSRange(startIndex..<endIndex, in: self)
     }
 }
