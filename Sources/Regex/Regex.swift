@@ -58,12 +58,12 @@ extension Regex {
         in string: String,
         options: MatchingOptions = [],
         range: NSRange? = nil,
-        using block: (_ result: MatchResult?, _ flags: MatchingFlags, _ stop: inout Bool) -> Void
+        using block: (_ result: Match?, _ flags: MatchingFlags, _ stop: inout Bool) -> Void
     ) {
         // `enumerateMatches` requires escaping closure in non-darwin platforms
         withoutActuallyEscaping(block) { block in
             _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullNSRange) { result, flags, stop in
-                let r = result.map { MatchResult(result: $0, in: string) }
+                let r = result.map { Match(result: $0, in: string) }
                 var s = false
                 block(r, flags, &s)
                 stop.pointee = ObjCBool(s)
@@ -71,9 +71,9 @@ extension Regex {
         }
     }
     
-    public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [MatchResult] {
+    public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [Match] {
         return _regex.matches(in: string, options: options, range: range ?? string.fullNSRange).map {
-            MatchResult(result: $0, in: string)
+            Match(result: $0, in: string)
         }
     }
     
@@ -81,9 +81,9 @@ extension Regex {
         return _regex.numberOfMatches(in: string, options: options, range: range ?? string.fullNSRange)
     }
     
-    public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> MatchResult? {
+    public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Match? {
         return _regex.firstMatch(in: string, options: options, range: range ?? string.fullNSRange).map {
-            MatchResult(result: $0, in: string)
+            Match(result: $0, in: string)
         }
     }
     
