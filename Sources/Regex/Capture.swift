@@ -12,7 +12,7 @@ extension Regex.Match {
     /// A captured string for a single match.
     public struct Capture: Equatable, Hashable {
         
-        private enum Content: Equatable, Hashable {
+        private enum Slice: Equatable, Hashable {
             
             /// Valid captured substring.
             case valid(substring: Substring)
@@ -22,7 +22,7 @@ extension Regex.Match {
             /// The original string is stored for later slicing.
             case invalid(original: NSString)
             
-            static func validate(string: String, range: NSRange) -> Content {
+            static func validate(string: String, range: NSRange) -> Slice {
                 if let r = Range(range, in: string) {
                     return .valid(substring: string[r])
                 } else {
@@ -32,19 +32,19 @@ extension Regex.Match {
         }
         
         /// Captured content.
-        private let _content: Content
+        private let slice: Slice
         
         /// The matching range.
         public let range: NSRange
         
         init(string: String, range: NSRange) {
-            self._content = .validate(string: string, range: range)
+            self.slice = .validate(string: string, range: range)
             self.range = range
         }
         
         /// The matched string.
         public var string: String {
-            switch _content {
+            switch slice {
             case let .valid(substring):
                 return String(substring)
             case let .invalid(original):
@@ -53,7 +53,7 @@ extension Regex.Match {
         }
         
         /* public */ var content: Substring? {
-            switch _content {
+            switch slice {
             case let .valid(substring):
                 return substring
             default:

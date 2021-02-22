@@ -13,20 +13,20 @@ public struct Regex: Equatable, Hashable {
     public typealias MatchingOptions = NSRegularExpression.MatchingOptions
     public typealias MatchingFlags = NSRegularExpression.MatchingFlags
     
-    let _regex: NSRegularExpression
+    let regularExpression: NSRegularExpression
     
     init(_ regex: NSRegularExpression) {
-        _regex = regex
+        regularExpression = regex
     }
     
     #if swift(>=5.1)
     @_disfavoredOverload
     public init(_ pattern: String, options: Options = []) throws {
-        _regex = try NSRegularExpression(pattern: pattern, options: options)
+        self.init(try NSRegularExpression(pattern: pattern, options: options))
     }
     #else
     public init(_ pattern: String, options: Options = []) throws {
-        _regex = try NSRegularExpression(pattern: pattern, options: options)
+        self.init(try NSRegularExpression(pattern: pattern, options: options))
     }
     #endif
     
@@ -42,15 +42,15 @@ public struct Regex: Equatable, Hashable {
 extension Regex {
     
     public var pattern: String {
-        return _regex.pattern
+        return regularExpression.pattern
     }
     
     public var options: Options {
-        return _regex.options
+        return regularExpression.options
     }
     
     public var numberOfCaptureGroups: Int {
-        return _regex.numberOfCaptureGroups
+        return regularExpression.numberOfCaptureGroups
     }
     
     public static func escapedPattern(for string: String) -> String {
@@ -68,7 +68,7 @@ extension Regex {
     ) {
         // `enumerateMatches` requires escaping closure in non-darwin platforms
         withoutActuallyEscaping(block) { block in
-            _regex.enumerateMatches(in: string, options: options, range: range ?? string.fullNSRange) { result, flags, stop in
+            regularExpression.enumerateMatches(in: string, options: options, range: range ?? string.fullNSRange) { result, flags, stop in
                 let r = result.map { Match(result: $0, in: string) }
                 var s = false
                 block(r, flags, &s)
@@ -78,23 +78,23 @@ extension Regex {
     }
     
     public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [Match] {
-        return _regex.matches(in: string, options: options, range: range ?? string.fullNSRange).map {
+        return regularExpression.matches(in: string, options: options, range: range ?? string.fullNSRange).map {
             Match(result: $0, in: string)
         }
     }
     
     public func numberOfMatches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Int {
-        return _regex.numberOfMatches(in: string, options: options, range: range ?? string.fullNSRange)
+        return regularExpression.numberOfMatches(in: string, options: options, range: range ?? string.fullNSRange)
     }
     
     public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Match? {
-        return _regex.firstMatch(in: string, options: options, range: range ?? string.fullNSRange).map {
+        return regularExpression.firstMatch(in: string, options: options, range: range ?? string.fullNSRange).map {
             Match(result: $0, in: string)
         }
     }
     
     public func isMatch(_ string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Bool {
-        return _regex.firstMatch(in: string, options: options, range: range ?? string.fullNSRange) != nil
+        return regularExpression.firstMatch(in: string, options: options, range: range ?? string.fullNSRange) != nil
     }
     
     public static func ~= (pattern: Regex, value: String) -> Bool {

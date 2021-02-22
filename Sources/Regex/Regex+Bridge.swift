@@ -12,7 +12,7 @@ extension Regex: ReferenceConvertible {
     public typealias ReferenceType = NSRegularExpression
     
     public func _bridgeToObjectiveC() -> NSRegularExpression {
-        return _regex
+        return regularExpression
     }
     
     public static func _forceBridgeFromObjectiveC(_ source: NSRegularExpression, result: inout Regex?) {
@@ -29,10 +29,10 @@ extension Regex: ReferenceConvertible {
     }
     
     public var description: String {
-        return _regex.description
+        return regularExpression.description
     }
     
     public var debugDescription: String {
-        return _regex.debugDescription
+        return regularExpression.debugDescription
     }
 }
