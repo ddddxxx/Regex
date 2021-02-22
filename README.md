@@ -29,7 +29,7 @@ let pattern = "(foo|bar)"
 let _ = try! Regex(pattern) // create from dynamic string, throwing
 
 let match = regex.firstMatch(in: "barbecue")
-match!.captures[1]!.string // "bar"
+match![1]!.string // "bar"
 ```
 
 ## License

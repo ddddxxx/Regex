@@ -14,8 +14,8 @@ extension Regex {
         
         /// A group of captured strings for a single match.
         ///
-        /// The 0th capture always corresponds to the entire match. A capture group might be `nil` If it didn't
-        /// participate in the match.
+        /// The 0th capture always corresponds to the entire match. A capture
+        /// group might be `nil` If it didn't participate in the match.
         public let captures: [Capture?]
         
         init(result: NSTextCheckingResult, in string: String) {
@@ -37,6 +37,10 @@ extension Regex {
             return captures[0].unsafelyUnwrapped.string
         }
         
+        /// The entire matched substring.
+        ///
+        /// Returns `nil` if matched string breaks extended grapheme cluster
+        /// thus the substring cannot be formed.
         /* public */ var content: Substring? {
             return captures[0].unsafelyUnwrapped.content
         }

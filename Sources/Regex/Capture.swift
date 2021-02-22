@@ -17,7 +17,8 @@ extension Regex.Match {
             /// Valid captured substring.
             case valid(substring: Substring)
             
-            /// Captured string breaks extended grapheme cluster thus the substring cannot be formed.
+            /// Captured string breaks extended grapheme cluster thus the
+            /// substring cannot be formed.
             ///
             /// The original string is stored for later slicing.
             case invalid(original: NSString)
@@ -52,6 +53,10 @@ extension Regex.Match {
             }
         }
         
+        /// The matched substring.
+        ///
+        /// Returns `nil` if captured string breaks extended grapheme cluster
+        /// thus the substring cannot be formed.
         /* public */ var content: Substring? {
             switch slice {
             case let .valid(substring):

@@ -19,10 +19,16 @@ public struct Regex: Equatable, Hashable {
         regularExpression = regex
     }
     
+    #if swift(>=5.1)
     @_disfavoredOverload
     public init(_ pattern: String, options: Options = []) throws {
         self.init(try NSRegularExpression(pattern: pattern, options: options))
     }
+    #else
+    public init(_ pattern: String, options: Options = []) throws {
+        self.init(try NSRegularExpression(pattern: pattern, options: options))
+    }
+    #endif
     
     public init(_ staticPattern: StaticString, options: Options = []) {
         do {
