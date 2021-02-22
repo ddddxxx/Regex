@@ -4,7 +4,7 @@ Swift wrapper of NSRegularExpression
 
 ## Requirements
 
-- Swift 5.0
+- Swift 5.1
 
 ## Installation
 
