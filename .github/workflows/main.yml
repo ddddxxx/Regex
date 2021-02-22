@@ -5,18 +5,14 @@ on:
 
 jobs:
   mac:
-    strategy:
-      matrix:
-        xcode_version: ['11', '12']
     runs-on: macOS-latest
-    env:
-      DEVELOPER_DIR: /Applications/Xcode_${{ matrix.xcode_version }}.app/Contents/Developer
     steps:
       - uses: actions/checkout@v1
       - name: Swift Version
         run: swift -version
       - name: Build and Test
         run: swift test
+
   linux:
     strategy:
       matrix:

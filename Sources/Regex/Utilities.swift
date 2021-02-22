@@ -10,6 +10,6 @@ import Foundation
 extension StringProtocol {
     
     var fullNSRange: NSRange {
-        NSRange(startIndex..<endIndex, in: self)
+        return NSRange(startIndex..<endIndex, in: self)
     }
 }
