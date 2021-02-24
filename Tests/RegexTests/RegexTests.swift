@@ -57,11 +57,28 @@ class RegexTests: XCTestCase {
         XCTAssertEqual(match.string, "cafe")
     }
     
+    func testCaptureBackingStorage() throws {
+        let source = "\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}\u{200D}\u{1F467}"
+        let regex = Regex(#"[\x{1F467}-\x{1F469}]"#)
+        
+        let matchs = regex.matches(in: source)
+        XCTAssertEqual(matchs.count, 4)
+        let originalStrings = matchs.compactMap { $0[0]?.originalString }
+        XCTAssertEqual(originalStrings.count, 4)
+        
+        let original = originalStrings[0]
+        for str in originalStrings {
+            // FIXME: bridge
+            XCTAssert(original === str)
+        }
+    }
+    
     static var allTests = [
         ("testInit", testInit),
         ("testMatches", testMatches),
         ("testReplace", testReplace),
         ("testCaptureGroup", testCaptureGroup),
         ("testExtendedGraphemeClusters", testExtendedGraphemeClusters),
+        ("testCaptureBackingStorage", testCaptureBackingStorage),
     ]
 }

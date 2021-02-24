@@ -62,8 +62,9 @@ extension Regex {
     ) {
         // `enumerateMatches` requires escaping closure in non-darwin platforms
         withoutActuallyEscaping(block) { block in
-            regularExpression.enumerateMatches(in: string, options: options, range: range ?? string.fullNSRange) { result, flags, stop in
-                let r = result.map { Match(result: $0, in: string) }
+            let nsstring = string as NSString
+            regularExpression.enumerateMatches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange) { result, flags, stop in
+                let r = result.map { Match(string: string, nsstring: nsstring, result: $0) }
                 var s = false
                 block(r, flags, &s)
                 stop.pointee = ObjCBool(s)
@@ -72,23 +73,27 @@ extension Regex {
     }
     
     public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [Match] {
-        return regularExpression.matches(in: string, options: options, range: range ?? string.fullNSRange).map {
-            Match(result: $0, in: string)
+        let nsstring = string as NSString
+        return regularExpression.matches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange).map {
+            Match(string: string, nsstring: nsstring, result: $0)
         }
     }
     
     public func numberOfMatches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Int {
-        return regularExpression.numberOfMatches(in: string, options: options, range: range ?? string.fullNSRange)
+        let nsstring = string as NSString
+        return regularExpression.numberOfMatches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange)
     }
     
     public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Match? {
-        return regularExpression.firstMatch(in: string, options: options, range: range ?? string.fullNSRange).map {
-            Match(result: $0, in: string)
+        let nsstring = string as NSString
+        return regularExpression.firstMatch(in: nsstring as String, options: options, range: range ?? nsstring.fullRange).map {
+            Match(string: string, nsstring: nsstring, result: $0)
         }
     }
     
     public func isMatch(_ string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Bool {
-        return regularExpression.firstMatch(in: string, options: options, range: range ?? string.fullNSRange) != nil
+        let nsstring = string as NSString
+        return regularExpression.firstMatch(in: nsstring as String, options: options, range: range ?? nsstring.fullRange) != nil
     }
     
     public static func ~= (pattern: Regex, value: String) -> Bool {

@@ -22,14 +22,6 @@ extension Regex.Match {
             ///
             /// The original string is stored for later slicing.
             case invalid(original: NSString)
-            
-            static func validate(string: String, range: NSRange) -> Slice {
-                if let r = Range(range, in: string) {
-                    return .valid(substring: string[r])
-                } else {
-                    return .invalid(original: string as NSString)
-                }
-            }
         }
         
         /// Captured content.
@@ -38,9 +30,13 @@ extension Regex.Match {
         /// The matching range.
         public let range: NSRange
         
-        init(string: String, range: NSRange) {
-            self.slice = .validate(string: string, range: range)
+        init(string: String, nsstring: NSString, range: NSRange) {
             self.range = range
+            if let r = Range(range, in: string) {
+                self.slice = .valid(substring: string[r])
+            } else {
+                self.slice = .invalid(original: nsstring)
+            }
         }
         
         /// The matched string.
@@ -64,6 +60,19 @@ extension Regex.Match {
             default:
                 return nil
             }
+        }
+    }
+}
+
+// for test only
+extension Regex.Match.Capture {
+    
+    var originalString: NSString? {
+        switch slice {
+        case .valid:
+            return nil
+        case let .invalid(original: str):
+            return str
         }
     }
 }

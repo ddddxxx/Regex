@@ -18,12 +18,12 @@ extension Regex {
         /// group might be `nil` If it didn't participate in the match.
         public let captures: [Capture?]
         
-        init(result: NSTextCheckingResult, in string: String) {
+        init(string: String, nsstring: NSString, result: NSTextCheckingResult) {
             precondition(result.range.location != NSNotFound)
             captures = (0..<result.numberOfRanges).map { index in
                 let nsRange = result.range(at: index)
                 guard nsRange.location != NSNotFound else { return nil }
-                return Capture(string: string, range: nsRange)
+                return Capture(string: string, nsstring: nsstring, range: nsRange)
             }
         }
         
