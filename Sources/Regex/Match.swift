@@ -18,6 +18,12 @@ extension Regex {
         /// group might be `nil` If it didn't participate in the match.
         public let captures: [Capture?]
         
+        // Use both String and NSString to avoid bridging overhead.
+        //
+        // This causes about 5% performance loss for valid slice (why), and 30%
+        // performance gain for invalid slice.
+        //
+        // See RegexTests.testCaptureBackingStorage
         init(string: String, nsstring: NSString, result: NSTextCheckingResult) {
             precondition(result.range.location != NSNotFound)
             captures = (0..<result.numberOfRanges).map { index in
