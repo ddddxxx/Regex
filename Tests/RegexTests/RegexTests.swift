@@ -72,13 +72,4 @@ class RegexTests: XCTestCase {
             XCTAssert(original === str)
         }
     }
-    
-    static var allTests = [
-        ("testInit", testInit),
-        ("testMatches", testMatches),
-        ("testReplace", testReplace),
-        ("testCaptureGroup", testCaptureGroup),
-        ("testExtendedGraphemeClusters", testExtendedGraphemeClusters),
-        ("testCaptureBackingStorage", testCaptureBackingStorage),
-    ]
 }

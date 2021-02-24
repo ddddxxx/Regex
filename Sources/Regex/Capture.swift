@@ -1,5 +1,5 @@
 //
-//  Match.swift
+//  Capture.swift
 //
 //  This file is part of Regex - https://github.com/ddddxxx/Regex
 //  Copyright (C) 2021  Xander Deng. Licensed under the MIT License.

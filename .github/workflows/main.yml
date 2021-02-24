@@ -22,4 +22,4 @@ jobs:
       image: swift:${{ matrix.swift_version }}
     steps:
       - uses: actions/checkout@v1
-      - run: swift test
+      - run: swift test --enable-test-discovery

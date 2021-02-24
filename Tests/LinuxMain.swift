@@ -1,6 +1,1 @@
-import XCTest
-@testable import RegexTests
-
-XCTMain([
-    testCase(RegexTests.allTests),
-])
+fatalError("Run the tests with `swift test --enable-test-discovery`.")
