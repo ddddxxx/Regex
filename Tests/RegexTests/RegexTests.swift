@@ -68,8 +68,27 @@ class RegexTests: XCTestCase {
         
         let original = originalStrings[0]
         for str in originalStrings {
-            // FIXME: bridge
             XCTAssert(original === str)
+        }
+    }
+    
+    func testPatternMatch() {
+        let regex = Regex("(foo|bar)")
+        
+        XCTAssert(regex ~= "foo")
+        
+        switch "bar" {
+        case regex:
+            break
+        default:
+            XCTFail()
+        }
+        
+        switch "baz" {
+        case regex:
+            XCTFail()
+        default:
+            break
         }
     }
 }
