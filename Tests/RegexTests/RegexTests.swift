@@ -119,9 +119,10 @@ class RegexTests: XCTestCase {
     
     func testNonAsciiNativeStringPerformance() {
         let string = TestResources.shijing().makeNative()
-        let pattern = Regex(#"(?<=[，。])(.+)？"#)
+        let pattern = Regex(#"(?<=[，。？！\s])([\u4E00-\u9FFF]+?)？"#)
         measure {
             let matchs = pattern.matches(in: string)
+            XCTAssertEqual(matchs.count, 330)
             for match in matchs {
                 _ = match.string
             }
@@ -130,9 +131,10 @@ class RegexTests: XCTestCase {
     
     func testNonAsciiCocoaStringPerformance() {
         let string = TestResources.shijing().makeCocoa()
-        let pattern = Regex(#"(?<=[，。])(.+)？"#)
+        let pattern = Regex(#"(?<=[，。？！\s])([\u4E00-\u9FFF]+?)？"#)
         measure {
             let matchs = pattern.matches(in: string)
+            XCTAssertEqual(matchs.count, 330)
             for match in matchs {
                 _ = match.string
             }
