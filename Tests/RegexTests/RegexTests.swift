@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Foundation
 @testable import Regex
 
 class RegexTests: XCTestCase {
@@ -90,5 +91,75 @@ class RegexTests: XCTestCase {
         default:
             break
         }
+    }
+    
+    func testAsciiNativeStringPerformance() {
+        let string = TestResources.dullBoy().makeNative()
+        let pattern = Regex(#"[A-Z][a-z]+"#)
+        measure {
+            let matchs = pattern.matches(in: string)
+            XCTAssertEqual(matchs.count, 2000)
+            for match in matchs {
+                _ = match.string
+            }
+        }
+    }
+    
+    func testAsciiCocoaStringPerformance() {
+        let string = TestResources.dullBoy().makeCocoa()
+        let pattern = Regex(#"[A-Z][a-z]+"#)
+        measure {
+            let matchs = pattern.matches(in: string)
+            XCTAssertEqual(matchs.count, 2000)
+            for match in matchs {
+                _ = match.string
+            }
+        }
+    }
+    
+    func testNonAsciiNativeStringPerformance() {
+        let string = TestResources.shijing().makeNative()
+        let pattern = Regex(#"(?<=[，。])(.+)？"#)
+        measure {
+            let matchs = pattern.matches(in: string)
+            for match in matchs {
+                _ = match.string
+            }
+        }
+    }
+    
+    func testNonAsciiCocoaStringPerformance() {
+        let string = TestResources.shijing().makeCocoa()
+        let pattern = Regex(#"(?<=[，。])(.+)？"#)
+        measure {
+            let matchs = pattern.matches(in: string)
+            for match in matchs {
+                _ = match.string
+            }
+        }
+    }
+}
+
+enum TestResources {
+    
+    static func shijing() -> String {
+        let resources = URL(fileURLWithPath: #file).deletingLastPathComponent().appendingPathComponent("Resources")
+        let url = resources.appendingPathComponent("shijing").appendingPathExtension("txt")
+        return try! String(contentsOf: url)
+    }
+    
+    static func dullBoy() -> String {
+        return String(repeating: "All work and no play makes Jack a dull boy\n", count: 1000)
+    }
+}
+
+extension String {
+    
+    func makeNative() -> String {
+        return String(Array(self))
+    }
+    
+    func makeCocoa() -> String {
+        return NSString(string: self) as String
     }
 }
