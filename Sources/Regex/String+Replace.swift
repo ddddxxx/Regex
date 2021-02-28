@@ -13,7 +13,7 @@ extension String {
     /// specified range of the string are replaced with the given template
     /// string.
     public func replacingMatches<Template: StringProtocol>(of regex: Regex, with template: Template, options: Regex.MatchingOptions = [], range: NSRange? = nil) -> String {
-        let nsstring = self as NSString
+        let nsstring = NSString(string: self)
         return regex.regularExpression.stringByReplacingMatches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange, withTemplate: String(template))
     }
 }
