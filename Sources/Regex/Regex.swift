@@ -109,7 +109,7 @@ extension Regex {
     ) {
         // `enumerateMatches` requires escaping closure in non-darwin platforms
         withoutActuallyEscaping(block) { block in
-            let nsstring = NSString(string: string)
+            let nsstring = string.makeCocoa()
             regularExpression.enumerateMatches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange) { result, flags, stop in
                 let r = result.map { Match(string: string, nsstring: nsstring, result: $0) }
                 var s = false
@@ -120,26 +120,26 @@ extension Regex {
     }
     
     public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [Match] {
-        let nsstring = NSString(string: string)
+        let nsstring = string.makeCocoa()
         return regularExpression.matches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange).map {
             Match(string: string, nsstring: nsstring, result: $0)
         }
     }
     
     public func numberOfMatches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Int {
-        let nsstring = NSString(string: string)
+        let nsstring = string.makeCocoa()
         return regularExpression.numberOfMatches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange)
     }
     
     public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Match? {
-        let nsstring = NSString(string: string)
+        let nsstring = string.makeCocoa()
         return regularExpression.firstMatch(in: nsstring as String, options: options, range: range ?? nsstring.fullRange).map {
             Match(string: string, nsstring: nsstring, result: $0)
         }
     }
     
     public func isMatch(_ string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Bool {
-        let nsstring = NSString(string: string)
+        let nsstring = string.makeCocoa()
         return regularExpression.firstMatch(in: nsstring as String, options: options, range: range ?? nsstring.fullRange) != nil
     }
     

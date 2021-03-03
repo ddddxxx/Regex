@@ -109,7 +109,7 @@ class RegexTests: XCTestCase {
         let string = TestResources.dullBoy().makeCocoa()
         let pattern = Regex(#"[A-Z][a-z]+"#)
         measure {
-            let matchs = pattern.matches(in: string)
+            let matchs = pattern.matches(in: string as String)
             XCTAssertEqual(matchs.count, 2000)
             for match in matchs {
                 _ = match.string
@@ -133,7 +133,7 @@ class RegexTests: XCTestCase {
         let string = TestResources.shijing().makeCocoa()
         let pattern = Regex(#"(?<=[，。？！\s])([\u4E00-\u9FFF]+?)？"#)
         measure {
-            let matchs = pattern.matches(in: string)
+            let matchs = pattern.matches(in: string as String)
             XCTAssertEqual(matchs.count, 330)
             for match in matchs {
                 _ = match.string
@@ -152,16 +152,5 @@ enum TestResources {
     
     static func dullBoy() -> String {
         return String(repeating: "All work and no play makes Jack a dull boy\n", count: 1000)
-    }
-}
-
-extension String {
-    
-    func makeNative() -> String {
-        return String(Array(self))
-    }
-    
-    func makeCocoa() -> String {
-        return NSString(string: self) as String
     }
 }

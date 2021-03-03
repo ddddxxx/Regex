@@ -13,3 +13,31 @@ extension NSString {
         return NSRange(location: 0, length: length)
     }
 }
+
+extension String {
+    
+    // isCocoaOrContiguousASCII
+    private var isCocoa: Bool {
+        if !isContiguousUTF8 {
+            // Opaque string. Currently, the only case is non-contiguous-ASCII
+            // lazily-bridged NSString. But it can change in the future.
+            return true
+        }
+        let cocoaStringClass: AnyClass = NSClassFromString("__NSCFString")!
+        return (self as NSString).isKind(of: cocoaStringClass)
+    }
+    
+    func makeCocoa() -> NSString {
+        if isCocoa {
+            return self as NSString
+        } else {
+            return NSString(string: self)
+        }
+    }
+    
+    func makeNative() -> String {
+        var str = self
+        str.makeContiguousUTF8()
+        return str
+    }
+}
