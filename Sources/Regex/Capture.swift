@@ -15,13 +15,26 @@ extension Regex.Match {
         private enum Slice: Equatable, Hashable {
             
             /// Valid captured substring.
-            case valid(substring: Substring)
+            case substring(Substring)
             
             /// Captured string breaks extended grapheme cluster thus the
-            /// substring cannot be formed.
-            ///
-            /// The original string is stored for later slicing.
-            case invalid(original: NSString)
+            /// substring cannot be formed. Use UTF16View instead
+            case utf16(Substring.UTF16View)
+            
+            var substring: Substring {
+                switch self {
+                case let .substring(s): return s
+                case let .utf16(s):     return Substring(s)
+                }
+            }
+            
+            static func == (lhs: Slice, rhs: Slice) -> Bool {
+                return lhs.substring == rhs.substring
+            }
+            
+            func hash(into hasher: inout Hasher) {
+                hasher.combine(substring)
+            }
         }
         
         /// Captured content.
@@ -30,49 +43,31 @@ extension Regex.Match {
         /// The matching range.
         public let range: NSRange
         
-        init(string: String, nsstring: NSString, range: NSRange) {
+        init(string: String, range: NSRange) {
             self.range = range
             if let r = Range(range, in: string) {
-                self.slice = .valid(substring: string[r])
+                self.slice = .substring(string[r])
             } else {
-                self.slice = .invalid(original: nsstring)
+//                let lower = String.UTF16View.Index(encodedOffset: range.lowerBound)
+//                let upper = String.UTF16View.Index(encodedOffset: range.upperBound)
+                let lower = String.UTF16View.Index(utf16Offset: range.location, in: string)
+                let upper = string.utf16.index(lower, offsetBy: range.length)
+                let utf16 = string.utf16[lower..<upper]
+                self.slice = .utf16(utf16)
             }
         }
         
         /// The matched string.
         public var string: String {
             switch slice {
-            case let .valid(substring):
-                return String(substring)
-            case let .invalid(original):
-                return original.substring(with: range)
+            case let .substring(s): return String(s)
+            case let .utf16(s):     return String(s)!
             }
         }
         
         /// The matched substring.
-        ///
-        /// Returns `nil` if captured string breaks extended grapheme cluster
-        /// thus the substring cannot be formed.
-        /* public */ var content: Substring? {
-            switch slice {
-            case let .valid(substring):
-                return substring
-            default:
-                return nil
-            }
-        }
-    }
-}
-
-// for test only
-extension Regex.Match.Capture {
-    
-    var originalString: NSString? {
-        switch slice {
-        case .valid:
-            return nil
-        case let .invalid(original: str):
-            return str
+        public var content: Substring {
+            return slice.substring
         }
     }
 }

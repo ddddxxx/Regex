@@ -24,12 +24,12 @@ extension Regex {
         // performance gain for invalid slice.
         //
         // See RegexTests.testCaptureBackingStorage
-        init(string: String, nsstring: NSString, result: NSTextCheckingResult) {
+        init(string: String, result: NSTextCheckingResult) {
             precondition(result.range.location != NSNotFound)
             captures = (0..<result.numberOfRanges).map { index in
                 let nsRange = result.range(at: index)
                 guard nsRange.location != NSNotFound else { return nil }
-                return Capture(string: string, nsstring: nsstring, range: nsRange)
+                return Capture(string: string, range: nsRange)
             }
         }
         
@@ -44,10 +44,7 @@ extension Regex {
         }
         
         /// The entire matched substring.
-        ///
-        /// Returns `nil` if matched string breaks extended grapheme cluster
-        /// thus the substring cannot be formed.
-        /* public */ var content: Substring? {
+        public var content: Substring {
             return captures[0].unsafelyUnwrapped.content
         }
         

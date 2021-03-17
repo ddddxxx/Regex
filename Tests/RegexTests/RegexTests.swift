@@ -52,25 +52,12 @@ class RegexTests: XCTestCase {
     
     func testExtendedGraphemeClusters() {
         let source = "cafe\u{301}" // café
-        let regex = Regex("caf.")
-        let match = regex.firstMatch(in: source)!
-        XCTAssertNil(match.content)
-        XCTAssertEqual(match.string, "cafe")
-    }
-    
-    func testCaptureBackingStorage() throws {
-        let source = "\u{1F468}\u{200D}\u{1F469}\u{200D}\u{1F467}\u{200D}\u{1F467}"
-        let regex = Regex(#"[\x{1F467}-\x{1F469}]"#)
-        
-        let matchs = regex.matches(in: source)
-        XCTAssertEqual(matchs.count, 4)
-        let originalStrings = matchs.compactMap { $0[0]?.originalString }
-        XCTAssertEqual(originalStrings.count, 4)
-        
-        let original = originalStrings[0]
-        for str in originalStrings {
-            XCTAssert(original === str)
-        }
+        let cafe = Regex("caf.").firstMatch(in: source)!
+        XCTAssertEqual(cafe.string, "cafe")
+        XCTAssertEqual(cafe.content, "cafe")
+        let accent = Regex(".$").firstMatch(in: source)!
+        XCTAssertEqual(accent.string, "\u{301}")
+        XCTAssertEqual(accent.content, "\u{301}")
     }
     
     func testPatternMatch() {
@@ -100,7 +87,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string)
             XCTAssertEqual(matchs.count, 2000)
             for match in matchs {
-                _ = match.string
+                _ = match.content
             }
         }
     }
@@ -112,7 +99,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string as String)
             XCTAssertEqual(matchs.count, 2000)
             for match in matchs {
-                _ = match.string
+                _ = match.content
             }
         }
     }
@@ -124,7 +111,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string)
             XCTAssertEqual(matchs.count, 330)
             for match in matchs {
-                _ = match.string
+                _ = match.content
             }
         }
     }
@@ -136,7 +123,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string as String)
             XCTAssertEqual(matchs.count, 330)
             for match in matchs {
-                _ = match.string
+                _ = match.content
             }
         }
     }
