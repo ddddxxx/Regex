@@ -12,7 +12,7 @@ Add the project to your `Package.swift` file:
 
 ```swift
 package.dependencies += [
-    .package(url: "https://github.com/ddddxxx/Regex", .upToNextMinor("0.2.0"))
+    .package(url: "https://github.com/ddddxxx/Regex", .upToNextMinor("1.0.0"))
 ]
 ```
 
@@ -29,7 +29,8 @@ let pattern = "(foo|bar)"
 let _ = try! Regex(pattern) // create from dynamic string, throwing
 
 let match = regex.firstMatch(in: "barbecue")!
-match.string // "bar"
+match.content // "bar" as Substring. It's encouraged to use this property instead of `string` for better performance.
+match.string // "bar" as String
 ```
 
 ### Capture Groups
@@ -37,9 +38,9 @@ match.string // "bar"
 ```swift
 let regex = Regex(#"(\d{4})-(\d{2})-(\d{2})"#)
 let match = regex.firstMatch(in: "2014-06-02")!
-let year = match[1]!.string
-let month = match[2]!.string
-let day = match[3]!.string
+let year = Int(match[1]!.content)
+let month = Int(match[2]!.content)
+let day = Int(match[3]!.content)
 ```
 
 ### Replace
