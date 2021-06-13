@@ -43,7 +43,7 @@ class RegexTests: XCTestCase {
         let regex = Regex(#"(\d+)(boo)? (foo) bar"#)
         let match = regex.firstMatch(in: source)!
         XCTAssertEqual(match.string, "123 foo bar")
-        XCTAssertEqual(match.captures.count, 4)
+        XCTAssertEqual(match.count, 4)
         XCTAssertEqual(match[0]?.string, "123 foo bar")
         XCTAssertEqual(match[1]?.string, "123")
         XCTAssertNil(match[2])
@@ -54,10 +54,8 @@ class RegexTests: XCTestCase {
         let source = "cafe\u{301}" // café
         let cafe = Regex("caf.").firstMatch(in: source)!
         XCTAssertEqual(cafe.string, "cafe")
-        XCTAssertEqual(cafe.content, "cafe")
         let accent = Regex(".$").firstMatch(in: source)!
         XCTAssertEqual(accent.string, "\u{301}")
-        XCTAssertEqual(accent.content, "\u{301}")
     }
     
     func testPatternMatch() {
@@ -87,7 +85,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string)
             XCTAssertEqual(matchs.count, 2000)
             for match in matchs {
-                _ = match.content
+                _ = match.string
             }
         }
     }
@@ -99,7 +97,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string as String)
             XCTAssertEqual(matchs.count, 2000)
             for match in matchs {
-                _ = match.content
+                _ = match.string
             }
         }
     }
@@ -111,7 +109,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string)
             XCTAssertEqual(matchs.count, 330)
             for match in matchs {
-                _ = match.content
+                _ = match.string
             }
         }
     }
@@ -123,7 +121,7 @@ class RegexTests: XCTestCase {
             let matchs = pattern.matches(in: string as String)
             XCTAssertEqual(matchs.count, 330)
             for match in matchs {
-                _ = match.content
+                _ = match.string
             }
         }
     }

@@ -111,7 +111,7 @@ extension Regex {
         withoutActuallyEscaping(block) { block in
             let nsstring = string.makeCocoa()
             regularExpression.enumerateMatches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange) { result, flags, stop in
-                let r = result.map { Match(string: nsstring as String, result: $0) }
+                let r = result.map { Match(originalString: nsstring as String, checkingResult: $0) }
                 var s = false
                 block(r, flags, &s)
                 stop.pointee = ObjCBool(s)
@@ -122,7 +122,7 @@ extension Regex {
     public func matches(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> [Match] {
         let nsstring = string.makeCocoa()
         return regularExpression.matches(in: nsstring as String, options: options, range: range ?? nsstring.fullRange).map {
-            Match(string: nsstring as String, result: $0)
+            Match(originalString: nsstring as String, checkingResult: $0)
         }
     }
     
@@ -134,7 +134,7 @@ extension Regex {
     public func firstMatch(in string: String, options: MatchingOptions = [], range: NSRange? = nil) -> Match? {
         let nsstring = string.makeCocoa()
         return regularExpression.firstMatch(in: nsstring as String, options: options, range: range ?? nsstring.fullRange).map {
-            Match(string: nsstring as String, result: $0)
+            Match(originalString: nsstring as String, checkingResult: $0)
         }
     }
     
