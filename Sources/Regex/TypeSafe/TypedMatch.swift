@@ -6,10 +6,10 @@
 //
 
 extension Regex {
-
+    
     @dynamicMemberLookup
     public struct TypedMatch<Result: MatchResultType> {
-        let match: Regex.Match
+        let matchResult: Regex.Match
     }
 }
 
@@ -36,44 +36,42 @@ public extension Regex.TypedMatch {
         guard let name = keyPath.fieldName else {
             preconditionFailure("Failed to get field name from key path \(keyPath). Use key path of stored property instead.")
         }
-        return (match.group(named: name)?.string).map(convertToResult) ?? resultFromNil()
+        return (matchResult[name]?.string).map(convertToResult) ?? resultFromNil()
+    }
+    
+    var match: Result.MatchResult {
+        convertToResult(matchResult.string)
     }
 }
 
 // MARK: Indexed Group
 
-public extension Regex.TypedMatch where Result: MatchResultType0 {
-    var match: Result.MatchResult {
-        convertToResult(match.string)
-    }
-}
-
 public extension Regex.TypedMatch where Result: MatchResultType1 {
     var capture1: Result.CaptureResult1 {
-        (match[1]?.string).map(convertToResult) ?? resultFromNil()
+        (matchResult[1]?.string).map(convertToResult) ?? resultFromNil()
     }
 }
 
 public extension Regex.TypedMatch where Result: MatchResultType2 {
     var capture2: Result.CaptureResult2 {
-        (match[2]?.string).map(convertToResult) ?? resultFromNil()
+        (matchResult[2]?.string).map(convertToResult) ?? resultFromNil()
     }
 }
 
 public extension Regex.TypedMatch where Result: MatchResultType3 {
     var capture3: Result.CaptureResult1 {
-        (match[3]?.string).map(convertToResult) ?? resultFromNil()
+        (matchResult[3]?.string).map(convertToResult) ?? resultFromNil()
     }
 }
 
 public extension Regex.TypedMatch where Result: MatchResultType4 {
     var capture4: Result.CaptureResult4 {
-        (match[4]?.string).map(convertToResult) ?? resultFromNil()
+        (matchResult[4]?.string).map(convertToResult) ?? resultFromNil()
     }
 }
 
 public extension Regex.TypedMatch where Result: MatchResultType5 {
     var capture5: Result.CaptureResult5 {
-        (match[5]?.string).map(convertToResult) ?? resultFromNil()
+        (matchResult[5]?.string).map(convertToResult) ?? resultFromNil()
     }
 }

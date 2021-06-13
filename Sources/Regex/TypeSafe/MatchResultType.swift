@@ -5,11 +5,13 @@
 //  Copyright (C) 2021  Xander Deng. Licensed under the MIT License.
 //
 
-public protocol MatchResultType {}
-
-public protocol MatchResultType0: MatchResultType {
+public protocol MatchResultType {
     associatedtype MatchResult: ExpressibleByMatchedString
     var match: MatchResult { get }
+}
+
+public extension MatchResultType where MatchResult == String {
+    var match: String { fatalError() }
 }
 
 public protocol MatchResultType1: MatchResultType {

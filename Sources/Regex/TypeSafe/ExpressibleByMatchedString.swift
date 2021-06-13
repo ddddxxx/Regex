@@ -16,6 +16,13 @@ extension ExpressibleByMatchedString where Self: LosslessStringConvertible {
     }
 }
 
+extension ExpressibleByMatchedString where Self: RawRepresentable, RawValue == String {
+    
+    public init?(matchedString: String) {
+        self.init(rawValue: matchedString)
+    }
+}
+
 extension Optional: ExpressibleByMatchedString where Wrapped: ExpressibleByMatchedString {
     
     public init(matchedString: String) {
