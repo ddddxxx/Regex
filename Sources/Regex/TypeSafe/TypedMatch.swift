@@ -59,7 +59,7 @@ public extension Regex.TypedMatch where Result: MatchResultType2 {
 }
 
 public extension Regex.TypedMatch where Result: MatchResultType3 {
-    var capture3: Result.CaptureResult1 {
+    var capture3: Result.CaptureResult3 {
         (matchResult[3]?.string).map(convertToResult) ?? resultFromNil()
     }
 }
