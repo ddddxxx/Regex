@@ -55,7 +55,7 @@ enum URLRegex: TypedRegex {
         let path: String?
         let query: String? // use `Optional` type for optional capture group
     }
-    static let regex = Regex(#"^(?<proto>.+)://(?<host>[^\s:/]+)(?::(?<port>[0-9]+))?(?<path>.+)?(?:\?(?<query>.+))$"#)
+    static let regex = Regex(#"^(?<proto>http(s)?)://(?<host>[^\s:/]+)(:(?<port>[0-9]+))?(?<path>.+)?(\?(?<query>.+))$"#)
 }
 let match = URLRegex.firstMatch(in: "http://www.foo.com:123/bar")!
 match.proto

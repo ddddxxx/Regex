@@ -22,7 +22,7 @@ class TypedRegexTests: XCTestCase {
                 let path: String?
                 let query: String?
             }
-            static let regex = Regex(#"^(?<proto>.+)://(?<host>[^\s:/]+)(?::(?<port>[0-9]+))?(?<path>.+)?(?:\?(?<query>.+))$"#)
+            static let regex = Regex(#"^(?<proto>http(s)?)://(?<host>[^\s:/]+)(:(?<port>[0-9]+))?(?<path>.+)?(\?(?<query>.+))$"#)
         }
         let match = URLRegex.firstMatch(in: "http://www.foo.com:123/bar?baz=1")!
         XCTAssertEqual(match.proto, .http)
