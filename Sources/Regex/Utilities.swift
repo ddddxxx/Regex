@@ -23,8 +23,10 @@ extension String {
             // lazily-bridged NSString. But it can change in the future.
             return true
         }
-        let cocoaStringClass: AnyClass = NSClassFromString("__NSCFString")!
-        return (self as NSString).isKind(of: cocoaStringClass)
+        if let stringClass = NSClassFromString("__NSCFString") {
+            return (self as NSString).isKind(of: stringClass)
+        }
+        return false
     }
     
     func makeCocoa() -> NSString {
