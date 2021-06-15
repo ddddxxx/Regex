@@ -23,7 +23,7 @@ package.dependencies += [
 ```swift
 import Regex
 
-enum NumberRegex: TypedRegex {
+enum DateRegex: TypedRegex {
     struct Result: MatchResultType3 { // `MatchResultType3` means 3 capture groups
         let capture1: Int
         let capture2: Int
@@ -32,7 +32,7 @@ enum NumberRegex: TypedRegex {
     static let regex = Regex(#"(\d{4})-(\d{2})-(\d{2})"#)
 }
 
-let match = NumberRegex.firstMatch(in: "2014-06-02")!
+let match = DateRegex.firstMatch(in: "2014-06-02")!
 match.capture1 
 // => 2014
 match.capture2 
@@ -72,7 +72,6 @@ match.query
 
 ### Create
 
-```swift
 ```swift
 let regex = Regex("(foo|bar)") // create from string literal, crash if failed
 
