@@ -1,6 +1,6 @@
 # Regex
 
-Swift wrapper of NSRegularExpression
+Type-safe regular expression.
 
 ## Requirements
 
@@ -12,7 +12,7 @@ Add the project to your `Package.swift` file:
 
 ```swift
 package.dependencies += [
-    .package(url: "https://github.com/ddddxxx/Regex", .upToNextMinor("1.0.0"))
+    .package(url: "https://github.com/ddddxxx/Regex", .upToNextMinor("2.0.0"))
 ]
 ```
 
@@ -23,24 +23,60 @@ package.dependencies += [
 ```swift
 import Regex
 
+enum DateRegex: TypedRegex {
+    struct Result: MatchResultType3 { // `MatchResultType3` means 3 capture groups
+        let capture1: Int
+        let capture2: Int
+        let capture3: Int
+    }
+    static let regex = Regex(#"(\d{4})-(\d{2})-(\d{2})"#)
+}
+
+let match = DateRegex.firstMatch(in: "2014-06-02")!
+match.capture1 
+// => 2014
+match.capture2 
+// => 6
+match.capture3 
+// => 2
+```
+
+### Named Group
+
+```swift
+enum URLRegex: TypedRegex {
+    struct Result: MatchResultType {
+        // you need to specify `ExpressibleByMatchedString` for custom types
+        // it automatically pick implementation from `LosslessStringConvertible` or `RawRepresentable` if possible
+        enum Proto: String, ExpressibleByMatchedString { case http, https }
+        let proto: Proto
+        let host: String
+        let port: Int?
+        let path: String?
+        let query: String? // use `Optional` type for optional capture group
+    }
+    static let regex = Regex(#"^(?<proto>http(s)?)://(?<host>[^\s:/]+)(:(?<port>[0-9]+))?(?<path>.+)?(\?(?<query>.+))$"#)
+}
+let match = URLRegex.firstMatch(in: "http://www.foo.com:123/bar")!
+match.proto
+// => Proto.http
+match.host
+// => "www.foo.com"
+match.port
+// => 123
+match.path
+// => "/bar"
+match.query
+// => nil
+```
+
+### Create
+
+```swift
 let regex = Regex("(foo|bar)") // create from string literal, crash if failed
 
 let pattern = "(foo|bar)"
 let _ = try! Regex(pattern) // create from dynamic string, throwing
-
-let match = regex.firstMatch(in: "barbecue")!
-match.content // "bar" as Substring. It's encouraged to use this property instead of `string` for better performance.
-match.string // "bar" as String
-```
-
-### Capture Groups
-
-```swift
-let regex = Regex(#"(\d{4})-(\d{2})-(\d{2})"#)
-let match = regex.firstMatch(in: "2014-06-02")!
-let year = Int(match[1]!.content)
-let month = Int(match[2]!.content)
-let day = Int(match[3]!.content)
 ```
 
 ### Replace
