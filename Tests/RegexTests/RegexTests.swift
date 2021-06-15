@@ -132,7 +132,12 @@ class RegexTests: XCTestCase {
 enum TestResources {
     
     static func shijing() -> String {
-        let resources = URL(fileURLWithPath: #file).deletingLastPathComponent().appendingPathComponent("Resources")
+        #if compiler(>=5.3)
+        let path = #filePath
+        #else
+        let path = #file
+        #endif
+        let resources = URL(fileURLWithPath: path).deletingLastPathComponent().appendingPathComponent("Resources")
         let url = resources.appendingPathComponent("shijing").appendingPathExtension("txt")
         return try! String(contentsOf: url)
     }
